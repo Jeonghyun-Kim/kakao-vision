@@ -12,6 +12,8 @@ export function withErrorHandler(handler: NextApiHandler) {
         res.status(400).json(createError('METHOD_NOT_EXISTS'));
       }
     } catch (err) {
+      console.error(err);
+
       if (isResSent(res)) {
         return;
       }

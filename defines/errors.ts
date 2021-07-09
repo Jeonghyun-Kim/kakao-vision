@@ -1,6 +1,6 @@
 import { isString } from '@utils/validator/common';
 
-const ERROR_VARIANTS = ['CE'] as const;
+const ERROR_VARIANTS = ['CE', 'EE'] as const;
 type ErrorCode = `${typeof ERROR_VARIANTS[number]}${number}`;
 
 export interface CustomError {
@@ -47,6 +47,18 @@ const ERRORS = {
     code: 'CE002',
     name: 'Validation failed',
     message: "Check your request's validity.",
+  },
+  NO_PERMISSION: {
+    code: 'CE003',
+    name: 'No permission',
+    message: 'You should register your domain to the referrer whitelist first.',
+  },
+
+  // External Error
+  AWS_ERROR: {
+    code: 'EE001',
+    name: 'AWS error',
+    message: '',
   },
 } as const;
 
