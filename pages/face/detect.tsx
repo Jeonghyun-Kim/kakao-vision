@@ -3,18 +3,18 @@ import NextImage from 'next/image';
 
 import { useUI } from '@components/context';
 import { Button } from '@components/ui';
-import { uploadImage } from '@lib/upload-image';
 import { loadImage } from '@lib/load-image';
-import { fetcher } from '@lib/fetcher';
+import { requestFaceDetection } from '@lib/client/request-face-detection';
 
 // types
 import { LocalImage } from 'types/image';
 
 export default function FaceDetectPage() {
   const [image, setImage] = useState<LocalImage | null>(null);
-  // const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  // const [previewSrc, setPreviewSrc] = useState<string | null>(null);
+  // TODO: Kakao face detection result type
+  const [result, setResult] = useState<any>(null);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { showNoti } = useUI();
@@ -26,20 +26,7 @@ export default function FaceDetectPage() {
       const file = e.target.files[0];
 
       try {
-        const src = await new Promise<string>((resolve, reject) => {
-          if (file.size > 19 * 1024 * 1024) {
-            reject(
-              `Exceeded maximum file isze (19MB). current file size: ${file.size / 1024 / 1024}`,
-            );
-          }
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(String(reader.result));
-          };
-          reader.readAsDataURL(file);
-        });
-
-        setImage(await loadImage(file));
+        setImage(await loadImage(file, { maxSizeInBytes: 19 }));
       } catch (err) {
         showNoti({ variant: 'alert', title: err.message });
       } finally {
@@ -57,15 +44,10 @@ export default function FaceDetectPage() {
   const handleUpload = useCallback(
     async (imageFile: File) => {
       try {
-        const key = await uploadImage(imageFile);
+        const resultData = await requestFaceDetection(imageFile);
 
-        await fetcher('/api/face/detect', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ key }),
-        });
-
-        showNoti({ title: `Successfully uploaded to s3 - ${key}` });
+        setResult(resultData);
+        showNoti({ title: 'Success!' });
       } catch (err) {
         showNoti({ variant: 'alert', title: err.message });
       }
@@ -109,13 +91,19 @@ export default function FaceDetectPage() {
           2,
         )}
       </div>
-      <div>
+      <div className="max-w-5xl">
         {image === null ? (
           '< select image file >'
         ) : (
-          <NextImage src={image.previewSrc} layout="fixed" objectFit="contain" {...image.size} />
+          <NextImage
+            src={image.previewSrc}
+            layout="responsive"
+            objectFit="contain"
+            {...image.size}
+          />
         )}
       </div>
+      <div className="mt-12">{JSON.stringify(result)}</div>
     </div>
   );
 }

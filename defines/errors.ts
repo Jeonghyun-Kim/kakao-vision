@@ -60,6 +60,11 @@ const ERRORS = {
     name: 'AWS error',
     message: '',
   },
+  KAKAO_ERROR: {
+    code: 'EE002',
+    name: 'Kakao error',
+    message: '',
+  },
 } as const;
 
 export default ERRORS;
