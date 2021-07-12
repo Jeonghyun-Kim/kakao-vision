@@ -5,6 +5,7 @@ import { withErrorHandler } from '@utils/with-error-handler';
 import { s3Client } from '@utils/aws/s3';
 import { isString } from '@utils/validator/common';
 import { createError } from '@defines/errors';
+import { checkReferrer } from '@lib/server/check-referrer';
 
 const Bucket = process.env.AWS_BUCKET_NAME;
 if (!Bucket) throw new Error('Missing AWS_BUCKET_NAME');
@@ -15,6 +16,7 @@ if (!KAKAO_REST_API_KEY) throw new Error('Missing KAKAO_REST_API_KEY');
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
+    checkReferrer(req, res);
     const { key } = req.body;
 
     if (!isString(key, { minLength: 10 })) {
@@ -25,8 +27,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await s3Client.send(command).catch(() => {
       return res.status(404).json(createError('AWS_ERROR', { message: 'Object does not exist.' }));
     });
-
-    console.log(`${CDN_URL}/${key}`);
 
     const response = await fetch('https://dapi.kakao.com/v2/vision/face/detect', {
       method: 'POST',
