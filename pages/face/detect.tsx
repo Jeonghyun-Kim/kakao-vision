@@ -10,8 +10,8 @@ import { FaceDetectionResult, requestFaceDetection } from '@lib/client/request-f
 import { LocalImage } from 'types/image';
 
 export default function FaceDetectPage() {
-  const [image, setImage] = useState<LocalImage | null>(null);
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<LocalImage | null>(null);
   const [result, setResult] = useState<FaceDetectionResult | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,8 +36,9 @@ export default function FaceDetectPage() {
     [showNoti],
   );
 
-  const handleClearInput = useCallback(() => {
+  const handleClear = useCallback(() => {
     setImage(null);
+    setResult(null);
   }, []);
 
   const handleUpload = useCallback(
@@ -68,7 +69,7 @@ export default function FaceDetectPage() {
       />
       <div className="space-x-4">
         <Button onClick={() => inputRef.current?.click()}>choose file</Button>
-        <Button onClick={handleClearInput}>clear</Button>
+        <Button onClick={handleClear}>clear</Button>
         <Button
           onClick={() => {
             if (!image) return;
@@ -102,7 +103,7 @@ export default function FaceDetectPage() {
           />
         )}
       </div>
-      <div className="mt-12">{JSON.stringify(result)}</div>
+      <div className="mt-12 whitespace-pre-line">{JSON.stringify(result, undefined, 2)}</div>
     </div>
   );
 }
