@@ -4,7 +4,7 @@ import NextImage from 'next/image';
 import { useUI } from '@components/context';
 import { Button } from '@components/ui';
 import { loadImage } from '@lib/load-image';
-import { requestFaceDetection } from '@lib/client/request-face-detection';
+import { FaceDetectionResult, requestFaceDetection } from '@lib/client/request-face-detection';
 
 // types
 import { LocalImage } from 'types/image';
@@ -12,8 +12,7 @@ import { LocalImage } from 'types/image';
 export default function FaceDetectPage() {
   const [image, setImage] = useState<LocalImage | null>(null);
   const [loading, setLoading] = useState(false);
-  // TODO: Kakao face detection result type
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<FaceDetectionResult | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
