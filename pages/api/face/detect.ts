@@ -16,7 +16,7 @@ if (!KAKAO_REST_API_KEY) throw new Error('Missing KAKAO_REST_API_KEY');
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    checkReferrer(req, res);
+    // checkReferrer(req, res);
     const { key } = req.body;
 
     if (!isString(key, { minLength: 10 })) {

@@ -10,7 +10,7 @@ if (!Bucket) throw new Error('Missing AWS_BUCKET_NAME');
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
-    checkReferrer(req, res);
+    // checkReferrer(req, res);
 
     const { url, fields } = await createPresignedPost(s3Client, {
       Bucket,
