@@ -4,7 +4,7 @@ import { createError } from '@defines/errors';
 
 const referrerWhitelsit = ['http://localhost:3000', 'https://kakao-vision.kay.kr'];
 
-const cors = Cors({ methods: ['GET', 'POST'], origin: '*' });
+const cors = Cors({ methods: ['GET', 'POST'] });
 
 export async function checkReferrer(req: NextApiRequest, res: NextApiResponse) {
   return new Promise((resolve, reject) => {
