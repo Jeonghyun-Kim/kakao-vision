@@ -6,11 +6,15 @@ const referrerWhitelsit = ['http://localhost:3000', 'https://kakao-vision.kay.kr
 
 const cors = Cors({ methods: ['GET', 'POST'], origin: '*' });
 
-export function checkReferrer(req: NextApiRequest, res: NextApiResponse) {
-  cors(req, res, (result) => {
-    if (result instanceof Error) {
-      throw createError('NO_PERMISSION');
-    }
+export async function checkReferrer(req: NextApiRequest, res: NextApiResponse) {
+  return new Promise((resolve, reject) => {
+    cors(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(createError('NO_PERMISSION'));
+      }
+
+      return resolve(result);
+    });
   });
 
   // for (const referrer of referrerWhitelsit) {
