@@ -2,10 +2,12 @@ import type { NextApiHandler } from 'next';
 import { isResSent } from 'next/dist/next-server/lib/utils';
 
 import { createError, isCustomError } from '@defines/errors';
+import { enableCors } from '@lib/server/enable-cors';
 
 export function withErrorHandler(handler: NextApiHandler) {
   const wrappedHandler: NextApiHandler = async (req, res) => {
     try {
+      await enableCors(req, res);
       await handler(req, res);
 
       if (!isResSent(res)) {
