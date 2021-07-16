@@ -6,6 +6,7 @@ import { s3Client } from '@utils/aws/s3';
 import { isString } from '@utils/validator/common';
 import { createError } from '@defines/errors';
 import { checkReferrer } from '@lib/server/check-referrer';
+import { enableCors } from '@lib/server/enable-cors';
 
 const Bucket = process.env.AWS_BUCKET_NAME;
 if (!Bucket) throw new Error('Missing AWS_BUCKET_NAME');
@@ -16,7 +17,9 @@ if (!KAKAO_REST_API_KEY) throw new Error('Missing KAKAO_REST_API_KEY');
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    await checkReferrer(req, res);
+    // await checkReferrer(req, res);
+    await enableCors(req, res);
+
     const { key } = req.body;
 
     if (!isString(key, { minLength: 10 })) {

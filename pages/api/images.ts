@@ -6,13 +6,15 @@ import { ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { s3Client } from '@utils/aws/s3';
 import { isString } from '@utils/validator/common';
 import { createError } from '@defines/errors';
+import { enableCors } from '@lib/server/enable-cors';
 
 const Bucket = process.env.AWS_BUCKET_NAME;
 if (!Bucket) throw new Error('Missing AWS_BUCKET_NAME');
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
-    await checkReferrer(req, res);
+    // await checkReferrer(req, res);
+    await enableCors(req, res);
 
     const { maxKeys = '100' } = req.query;
 
