@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === 'POST') {
-    res.setHeader('Set-Cookie', 'kay.test=hello-world; path=/; httpOnly; secure;');
+    res.setHeader('Set-Cookie', 'kay.test=hello-world; path=/; httpOnly; secure; SameSite=none;');
     return res.status(201).json({ status: 'ok' });
   }
 };
